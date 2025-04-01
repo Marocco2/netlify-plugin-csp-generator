@@ -35,9 +35,9 @@ function createFileProcessor (buildDir, disableGeneratedPolicies, generateForAll
     const generateHashesFromElement = generateHashes(dom, element => element.innerHTML)
     const generateHashesFromStyle = generateHashes(dom, element => element.getAttribute('style'))
 
-    const scripts = shouldGenerate('scriptSrc') ? generateHashesFromElement('script') : []
-    const styles = shouldGenerate('styleSrc') ? generateHashesFromElement('style') : []
-    const inlineStyles = shouldGenerate('styleSrc') ? generateHashesFromStyle('[style]') : []
+    const scripts = shouldGenerate('scriptSrcElem') ? generateHashesFromElement('script') : []
+    const styles = shouldGenerate('styleSrcElem') ? generateHashesFromElement('style') : []
+    const inlineStyles = shouldGenerate('styleSrcAttr') ? generateHashesFromStyle('[style]') : []
 
     const indexMatcher = new RegExp(`^${buildDir}(.*)index\\.html$`)
     const nonIndexMatcher = new RegExp(`^${buildDir}(.*\\/).*?\\.html$`)
@@ -53,8 +53,9 @@ function createFileProcessor (buildDir, disableGeneratedPolicies, generateForAll
     }
 
     const cspObject = {
-      scriptSrc: scripts,
-      styleSrc: [...inlineStyles, ...styles],
+      scriptSrcElem: scripts,
+      styleSrcElem: styles,
+      styleSrcAttr: inlineStyles,
     }
 
     return {
